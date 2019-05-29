@@ -21,8 +21,11 @@ Also note that missing values were not imputed. Depending upon the variable of i
 
 ### Resources
 Read these brief pages for background:
+
 https://www.audubon.org/conservation/join-christmas-bird-count
+
 https://www.audubon.org/christmas-bird-count-compiler-resources
+
 http://www.audubon.org/sites/default/files/documents/updated_compilers_manual_jan_2013.pdf
 
 Some column descriptions here (not comprehensive):
@@ -30,10 +33,10 @@ http://www.audubon.org/sites/default/files/documents/cbc_report_field_definition
 
 Note the weather columns are often not absolutes. Excerpt:
 
-MIN_TEMP - Low temp of the count day to the nearest degree, in degrees F
-MAX_TEMP - High temp of the count day to nearest degree in F
-MIN_WIND - Representative lower range of wind speed on count day; this is not the minimum wind speed observed on the count day; stored in MPH
-MAX_WIND - Representative upper range of wind speed on count day; this is not the max wind speed observed on the count day; stored in MPH
-MIN_SNOW - Representative lower range for snow depth, reported to the nearest 0.25 inches; reported as 0 if there was no snow; stored in inches
-MAX_SNOW - Representative upper range for snow depth, reported to the nearest 0.25 inches;
+- MIN_TEMP - Low temp of the count day to the nearest degree, in degrees F
+- MAX_TEMP - High temp of the count day to nearest degree in F
+- MIN_WIND - Representative lower range of wind speed on count day; this is not the minimum wind speed observed on the count day; stored in MPH
+- MAX_WIND - Representative upper range of wind speed on count day; this is not the max wind speed observed on the count day; stored in MPH
+- MIN_SNOW - Representative lower range for snow depth, reported to the nearest 0.25 inches; reported as 0 if there was no snow; stored in inches
+-MAX_SNOW - Representative upper range for snow depth, reported to the nearest 0.25 inches;
 reported as 0 if there was no snow; stored in inches
