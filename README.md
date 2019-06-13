@@ -3,7 +3,7 @@
 
 The general questions we are trying to answer are, "what are the geographic, socioeconomic, or climatic correlates of different types of CBC participation and effort? Is it possible to model and predict participation and effort?".  Keep in mind that some years, counts could be cancelled due to nasty weather. There will not be a record for that count during that year.  Field counters, parties, hours, and distances make up the largest chunks of effort and are the most interesting to us.
 
-## Research Questions: 
+# Research Questions: 
 __1. What relationship, if any, exsists between geographic, socioeconomic, or climatic correlates features and CBC participation and effort for the chirstmas birdcouter?__
 
   Volenteers For this Research Question will produce descriptive anaylsis and predictive modeling to examine if a relationship can be determined.
@@ -32,7 +32,7 @@ Notes from Data Cleaning:
 - Outliers remain.
 - Also note that missing values were not imputed. Depending upon the variable of interest and the analysis, missing values might want to be treated various ways.
 
-## Known Next Steps 
+# Known Next Steps 
 ### Data Cleaning 
 The previous Team of Volenteers has left a todo list to finish cleaning the cbc data
   TODOS:
@@ -65,7 +65,7 @@ Given the data types and research questions for the Particpation Research Questi
   
 
 
-### Most Current Data
+# Most Current Data
 
 Data with columns in imperial and metric units avaiable here: 
 
@@ -80,7 +80,7 @@ http://www.audubon.org/sites/default/files/documents/cbc_report_field_definition
 - Also note that missing values were not imputed. Depending upon the variable of interest and the analysis, missing values might want to be treated various ways.
 
 
-### Resources
+# Resources
 Read these brief pages for background:
 
 https://www.audubon.org/conservation/join-christmas-bird-count
