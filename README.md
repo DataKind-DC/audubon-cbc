@@ -13,7 +13,7 @@ __1. What relationship, if any, exsists between geographic, socioeconomic, or cl
    Volenteers will 1) Examine the weather data avilible in the cbc data for completness and trends, 2) connected with a source of weather data (NOAA has been suggested) to determine the past accuraccy of weather data recorded by particpants, 3) make a determination on if weather data provided by cbc participants is valuble to collect. 
 
 
-### Volenteer Quick Start for June 13th 
+## Volenteer Quick Start for June 13th 
 1) Access the Most Current Data Here:
 [bird_count_cleaned_may_29_2019.csv](bird_count_cleaned_may_29_2019.csv)
 Data Dictonary: 
