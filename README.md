@@ -6,11 +6,11 @@ The general questions we are trying to answer are, "what are the geographic, soc
 ## Research Questions: 
 __1. What relationship, if any, exsists between geographic, socioeconomic, or climatic correlates features and CBC participation and effort for the chirstmas birdcouter?__
 
-    Volenteers For this Research Question will produce descriptive anaylsis and predictive modeling to examine if a relationship can be determined.
+  Volenteers For this Research Question will produce descriptive anaylsis and predictive modeling to examine if a relationship can be determined.
   
  __2. Should the Audubon society continue to collect weather data during the Christmas Bird Count?__ 
  
-     Volenteers will 1) Examine the weather data avilible in the cbc data for completness and trends, 2) connected with a source of weather data (NOAA has been suggested) to determine the past accuraccy of weather data recorded by particpants, 3) make a determination on if weather data provided by cbc participants is valuble to collect. 
+   Volenteers will 1) Examine the weather data avilible in the cbc data for completness and trends, 2) connected with a source of weather data (NOAA has been suggested) to determine the past accuraccy of weather data recorded by particpants, 3) make a determination on if weather data provided by cbc participants is valuble to collect. 
 
 
 ### Volenteer Quick Start for June 13th 
@@ -32,8 +32,8 @@ Notes from Data Cleaning:
 - Outliers remain.
 - Also note that missing values were not imputed. Depending upon the variable of interest and the analysis, missing values might want to be treated various ways.
 
-### Known Next Steps 
-## Data Cleaning 
+## Known Next Steps 
+### Data Cleaning 
 The previous Team of Volenteers has left a todo list to finish cleaning the cbc data
   TODOS:
   
@@ -55,12 +55,12 @@ The previous Team of Volenteers has left a todo list to finish cleaning the cbc 
     - Suggestion: remove large outliers?
     - What are temperature units
 
-## Weather Data API 
+### Weather Data API 
   For the weather data, DataKind needs to understand what weather data is avilible for the past based on lat long data (that we have from the cbc data file)
   
   It would be benificall to have volenteers research NOAA data and build an example of how to get temprature, percpipation? Parcipitation? (rain and snow data) and wind data via API and save that info in a ipython notebook or script. 
   
-## Decriptive and Model Design 
+### Decriptive and Model Design 
 Given the data types and research questions for the Particpation Research Question, it would be benifical to have volenteers design table shells for metrics that would help answer the research question and model designs they would like to see implemented. These shells and designs should include notes on any data aggrgations or transformations that would be required by a tech side. 
   
 
