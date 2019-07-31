@@ -38,15 +38,19 @@ The previous Team of Volenteers has left a todo list to finish cleaning the cbc 
   TODOS:
   
   - Numeric data (temperature, snow, wind, distance):
-    - Convert to same unit
-    - Impute missing values
+    - Convert to same unit (Done!) 
+    - Impute missing values and Invesitgate Outliers
+      - TASK: Need to invesigate the Outliers and determine if they are most likly typos or data 
     - Standardize/normalize
   
   - For categorical data:
-    - Encode appropriately
-    - Composites -> if no 4 then take average and treat as new category, 4 trumps all
+    - TASK: Encode appropriately
+       - Composites -> if no 4 then take average and treat as new category, 4 trumps all
+       
+ Logitutial Check 
   - Age of circles - older circles are more numerous
-    - Any outliers for these
+    - TASK: Check for Outlieres Any outliers for these
+    - TASK: Question: Should All circles be used or should we limit the circles in the final data set 
   
   - Open Questions:
     - what does snow_unit stand for?
@@ -58,7 +62,11 @@ The previous Team of Volenteers has left a todo list to finish cleaning the cbc 
 ###  - Weather Data API 
   For the weather data, DataKind needs to understand what weather data is avilible for the past based on lat long data (that we have from the cbc data file)
   
-  It would be benificall to have volenteers research NOAA data and build an example of how to get temprature, percpipation? Parcipitation? (rain and snow data) and wind data via API and save that info in a ipython notebook or script. 
+The NOAA api should be good for this. 
+ 
+ The smallest and most precise unit in the NOAA data is for a Station. Via the NOAA api we can list of all the stations and their lat long data. I think the next task will be to write a script that finds the closest NOAA station to each of the circles in the data set.  
+ 
+To get started with the NOAA API, this site is pretty good. https://grantwinney.com/day-7-noaa-api/.  
   
 ### - Decriptive and Model Design 
 Given the data types and research questions for the Particpation Research Question, it would be benifical to have volenteers design table shells for metrics that would help answer the research question and model designs they would like to see implemented. These shells and designs should include notes on any data aggrgations or transformations that would be required by a tech side. 
