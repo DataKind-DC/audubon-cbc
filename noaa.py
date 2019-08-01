@@ -54,6 +54,8 @@ def retrieve_noaa_data(token):
             params={'limit':'1000', 'offset': str(offset)})
         res.raise_for_status()
         results.extend(res.json()['results'])
+
+
         if len(results) > res.json()['metadata']['resultset']['count']:
             break
         else:
@@ -85,7 +87,7 @@ def find_closest_noaa_station(noaa_stations, row):
         noaa_stations, key = lambda d: dist_calc((d['coordinates'])))[0]
     result = {
         'circle_name': row['circle_name'],
-        'circle_coordinates': (row['lat'], row['lon']),
+        'circle_coordinates': lat_lng_pair,
         'closest_station': closest_noaa['name'],
         'closest_coordinates': closest_noaa['coordinates']
     }
@@ -109,15 +111,15 @@ def main():
     distance_callable = partial(find_closest_noaa_station, noaa_pairs)
     results = []
 
-    # 6 workers on a Macbook with 16GB of memory seems to be fine
-    # please adjust to your machine's specs
+    # 6 workers on a 2017 Macbook with 16GB of memory seems
+    # to be fine, please adjust to your machine's specs
     #
-    # keep in mind that this will take some time to run since there are
+    # Keep in mind that this will take some time to run since there are
     # over 100k circle records and 130k NOAA stations to reference
     with futures.ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
         jobs = [
             executor.submit(distance_callable, row)
-            for _, row in circles_data.iloc[0:10, :].iterrows()]
+            for _, row in circles_data.iterrows()]
 
         for job in futures.as_completed(jobs):
             output = job.result()
