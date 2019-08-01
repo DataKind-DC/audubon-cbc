@@ -29,7 +29,7 @@ def calculate_distance(lat_long_pair_1, lat_long_pair_2):
     """
     lat1, lng1 = lat_long_pair_1[0], lat_long_pair_1[1]
     lat2, lng2 = lat_long_pair_2[0], lat_long_pair_2[1]
-    r = 6371000 #radius of the Earth in m
+    r = 6371000 # radius of the Earth in m
     x = (lng2 - lng1) * cos(0.5*(lat2+lat1))
     y = (lat2 - lat1)
     return r * sqrt( x * x + y * y )
@@ -97,8 +97,7 @@ def main():
     :rtype: pandas.DataFrame
     """
     circles_data = pd.read_csv('audubon-cbc/bird_count_cleaned_may_29_2019.csv')
-    # noaa_stations = retrieve_noaa_data(os.environ.get('NOAA_API_KEY'))
-    noaa_stations = retrieve_noaa_data('ZPymGkbwmSBAroiKtkHYnhVuLdDrfIOn')
+    noaa_stations = retrieve_noaa_data(os.environ.get('NOAA_API_KEY'))
     noaa_pairs = [
         {'name': row['name'], 'coordinates': (row['latitude'], row['longitude'])}
         for _, row in noaa_stations.iterrows()]
