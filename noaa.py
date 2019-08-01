@@ -46,17 +46,22 @@ def retrieve_noaa_data(token):
     """
     results = []
     offset = 0
+
     while True:
         res = requests.get(
             'https://www.ncdc.noaa.gov/cdo-web/api/v2/stations', 
             headers={'Token': token}, 
             params={'limit':'1000', 'offset': str(offset)})
+        res.raise_for_status()
         results.extend(res.json()['results'])
         if len(results) > res.json()['metadata']['resultset']['count']:
             break
         else:
             print(f'length of results is {len(results)}')
             offset += 1000
+    
+    # ensure results align with the API counts
+    assert len(results) == res.json()['metadata']['resultset']['count']
         
     df = pd.DataFrame.from_dict(results)
     return df
