@@ -8,8 +8,10 @@ import os
 import pandas as pd
 import requests
 
+
 LOGGER = logging.getLogger(__name__)
 NUM_WORKERS = 6
+
 
 def calculate_distance(lat_long_pair_1, lat_long_pair_2):
     """Calculate distance between a pair of lat ands longs
@@ -32,7 +34,7 @@ def calculate_distance(lat_long_pair_1, lat_long_pair_2):
     y = (lat2 - lat1)
     return r * sqrt( x * x + y * y )
 
-xw
+
 def retrieve_noaa_data(token):
     """Retrieve and create a dataframe from the NOAA API
 
