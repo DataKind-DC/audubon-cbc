@@ -1,0 +1,187 @@
+---
+title: "Audubon Data Cleaning"
+author: "Zachary Cross"
+date: "August 1, 2019"
+output: html_document
+---
+
+Clean, profile, and prepare the raw Audubon data file, `cbc_effort_weather_1900-2018.csv` for further statistical processing.
+
+# Environment setup and raw data load
+```{r setup, include=FALSE}
+library(tidyverse)
+library(lubridate)
+```
+
+Read the raw data file, setting column data types explicitly where needed.
+```{r read_raw}
+raw <- readr::read_csv(
+  "cbc_effort_weather_1900-2018.csv",
+  col_types=cols(
+    feeder_hours=col_number(),
+    n_feeder_counters=col_number(),
+    
+    n_field_counters=col_number(),
+    field_distance=col_number(),
+    field_hours=col_number(),
+    
+    min_temp=col_number(),
+    max_temp=col_number(),
+    temp_unit=col_character(),  # Coded: 1, 2, or NA
+    
+    min_snow=col_number(),
+    max_snow=col_number(),
+    am_snow=col_character(),
+    pm_snow=col_character(),
+    snow_unit=col_character(),
+    
+    min_wind=col_number(),
+    max_wind=col_number(),
+    wind_unit=col_character(),
+    
+    am_cloud=col_number(),
+    pm_cloud=col_number(),
+    
+    am_rain=col_character(),
+    pm_rain=col_character(),
+    
+    nocturnal_hours=col_number(),
+    nocturnal_distance=col_number(),
+    
+    min_field_parties=col_integer(),
+    max_field_parties=col_integer()
+    )
+  ) 
+```
+
+Now filter the data to just circles in the United States and reorder the columns to put similar columns near each other.
+```{r}
+raw <- raw %>% 
+  filter(str_detect(country_state, 'US-')) %>%
+  select(
+    circle_name,
+    country_state,
+    lat,
+    lon,
+    count_year,
+    count_date,
+    
+    feeder_hours,
+    n_feeder_counters,
+    
+    n_field_counters,
+    min_field_parties,
+    max_field_parties,
+    field_hours,
+    field_distance,
+    nocturnal_hours,
+    nocturnal_distance,
+    distance_units,
+    
+    min_temp,
+    max_temp,
+    temp_unit,
+    
+    min_snow,
+    max_snow,
+    am_snow,
+    pm_snow,
+    snow_unit,
+    
+    min_wind,
+    max_wind,
+    wind_unit,
+    
+    am_cloud,
+    pm_cloud,
+    
+    am_rain,
+    pm_rain,
+  
+    everything()
+  )
+```
+
+
+Being able to identify individual circles is very important, so we add a `circle_id` column based on name and state.  Looking through the raw data, it appears that names, while unique for any given year, can be reused over time.
+
+For example, "Abilene" was the name of a circle in Kansas for 1905 and 1906 only. Then, in 1960, a circle named "Abilene" was created in Texas and is in use still today.
+```{r}
+# Add circle identifier - convert UTF-8 to ASCII (losing accents) to aid in plotting
+data <- raw %>%
+  mutate(
+    circle_id = iconv(paste(circle_name, country_state, sep="_"), "UTF-8", "ASCII")
+  ) %>%
+  group_by(circle_id) %>%
+  mutate(
+    circle_birth_year = min(count_year),
+    circle_age = count_year - circle_birth_year) %>%
+  select(circle_id, circle_age, everything())
+```
+
+Rain and Snow measurements come in a categorical form - let's split out the categories into individual boolean columns.  Read [this documentation](http://www.audubon.org/sites/default/files/documents/cbc_report_field_definitions_2013.pdf) for more.
+```{r}
+data <- data %>%
+  mutate(
+    # Decode am_snow
+    snow_heavy_am = grepl("1", am_snow),
+    snow_light_am =  grepl("2", am_snow),
+    snow_none_am =  grepl("3", am_snow),
+    snow_unknown_am =  grepl("4", am_snow),
+    # Decode pm_snow
+    snow_heavy_pm = grepl("1", pm_snow),
+    snow_light_pm =  grepl("2", pm_snow),
+    snow_none_pm =  grepl("3", pm_snow),
+    snow_unknown_pm =  grepl("4", pm_snow),
+    # Create new snow variable - did day have snow level at any poin?
+    snow_heavy_any = snow_heavy_am | snow_heavy_pm,
+    snow_light_any = snow_light_am | snow_light_pm,
+    snow_none_any = snow_none_am | snow_none_pm,
+    snow_unknown_any = snow_unknown_am | snow_unknown_pm,
+    
+    # Decode am_rain
+    rain_heavy_am = grepl("1", am_rain),
+    rain_light_am =  grepl("2", am_rain),
+    rain_none_am =  grepl("3", am_rain),
+    rain_unknown_am =  grepl("4", am_rain),
+    # Decode pm_rain
+    rain_heavy_pm = grepl("1", pm_rain),
+    rain_light_pm =  grepl("2", pm_rain),
+    rain_none_pm =  grepl("3", pm_rain),
+    rain_unknown_pm =  grepl("4", pm_rain),
+    # Create new rain variable - did day have rain level at any poin?
+    rain_heavy_any = rain_heavy_am | rain_heavy_pm,
+    rain_light_any = rain_light_am | rain_light_pm,
+    rain_none_any = rain_none_am | rain_none_pm,
+    rain_unknown_any = rain_unknown_am | rain_unknown_pm
+  )
+```
+
+Does year meaningfully affect participation?
+```{r}
+library(ggplot2)
+# ggplot(data, aes(x=count_year, y=n_field_counters)) + 
+  # geom_point()
+```
+
+```{r}
+# Are the highest participation circles just new? Or have they gained particpation over time?
+p99 <- quantile(data$n_field_counters, .999, na.rm=T)
+high_participation_circles <- data %>%
+  filter(count_year==2018) %>%
+  filter(n_field_counters>=p99) %>%
+  select(circle_id)
+
+high_participation_data <- data %>% 
+  filter(circle_id %in% high_participation_circles$circle_id)
+```
+
+```{r}
+ggplot(high_participation_data, aes(x=circle_age, y=n_field_counters, color=circle_id)) + 
+  geom_line() + 
+  geom_point() + 
+  theme_minimal() + 
+  labs(
+    title="Participation by age of circle for the 8 most-attended circles in 2018"
+  )
+```
