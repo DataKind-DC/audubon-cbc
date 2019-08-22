@@ -2,16 +2,22 @@
 title: "Audubon Data Cleaning"
 author: "Zachary Cross"
 date: "August 1, 2019"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 Clean, profile, and prepare the raw Audubon data file, `cbc_effort_weather_1900-2018.csv` for further statistical processing.
 
-# Environment setup and raw data load
+### Environment setup
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(lubridate)
 ```
+
+# Data loading and decoding
+
+The following code chunks will load the original data file and handle (hopefully) uncontroversial tasks like decoding columns, type conversions, adding very simple new columns etc. More subjective data cleanup (e.g. outlier filtering) will be handled later.
 
 Read the raw data file, setting column data types explicitly where needed.
 ```{r read_raw}
@@ -27,11 +33,11 @@ raw <- readr::read_csv(
     
     min_temp=col_number(),
     max_temp=col_number(),
-    temp_unit=col_character(),  # Coded: 1, 2, or NA
+    temp_unit=col_number(),  # Coded: 1, 2, or NA
     
     min_snow=col_number(),
     max_snow=col_number(),
-    am_snow=col_character(),
+    am_snow=col_character(),  # combined categorical -- see below for conversion to multiple boolean columns
     pm_snow=col_character(),
     snow_unit=col_character(),
     
@@ -101,22 +107,26 @@ raw <- raw %>%
     everything()
   )
 ```
-
-
-Being able to identify individual circles is very important, so we add a `circle_id` column based on name and state.  Looking through the raw data, it appears that names, while unique for any given year, can be reused over time.
+# Basic Data Cleanup
+## Circles: Identifiers and Age
+Identifying individual circles is very important, so we add a `circle_id` column based on name and state.  Looking through the raw data, it appears that names, while unique for any given year, can be reused over time.
 
 For example, "Abilene" was the name of a circle in Kansas for 1905 and 1906 only. Then, in 1960, a circle named "Abilene" was created in Texas and is in use still today.
+
+We also add a circle `birth_year` and `circle_age` to each row to better understand how a circle's participation change as it ages.
 ```{r}
-# Add circle identifier - convert UTF-8 to ASCII (losing accents) to aid in plotting
 data <- raw %>%
   mutate(
+    # convert UTF-8 to ASCII (removes accents and such) to aid in plotting
     circle_id = iconv(paste(circle_name, country_state, sep="_"), "UTF-8", "ASCII")
   ) %>%
   group_by(circle_id) %>%
   mutate(
     circle_birth_year = min(count_year),
     circle_age = count_year - circle_birth_year) %>%
-  select(circle_id, circle_age, everything())
+  ungroup() %>%
+  select(circle_id, circle_age, everything()) %>%
+  arrange(desc(count_year), circle_id)  # Sort data by count_year descending, then circle_id
 ```
 
 Rain and Snow measurements come in a categorical form - let's split out the categories into individual boolean columns.  Read [this documentation](http://www.audubon.org/sites/default/files/documents/cbc_report_field_definitions_2013.pdf) for more.
@@ -133,7 +143,7 @@ data <- data %>%
     snow_light_pm =  grepl("2", pm_snow),
     snow_none_pm =  grepl("3", pm_snow),
     snow_unknown_pm =  grepl("4", pm_snow),
-    # Create new snow variable - did day have snow level at any poin?
+    # Create new snow variable - did day have snow level at any point?
     snow_heavy_any = snow_heavy_am | snow_heavy_pm,
     snow_light_any = snow_light_am | snow_light_pm,
     snow_none_any = snow_none_am | snow_none_pm,
@@ -149,39 +159,97 @@ data <- data %>%
     rain_light_pm =  grepl("2", pm_rain),
     rain_none_pm =  grepl("3", pm_rain),
     rain_unknown_pm =  grepl("4", pm_rain),
-    # Create new rain variable - did day have rain level at any poin?
+    # Create new rain variable - did day have rain level at any point?
     rain_heavy_any = rain_heavy_am | rain_heavy_pm,
     rain_light_any = rain_light_am | rain_light_pm,
     rain_none_any = rain_none_am | rain_none_pm,
     rain_unknown_any = rain_unknown_am | rain_unknown_pm
+  ) %>%
+  select(-am_snow, -pm_snow, -am_rain, -pm_rain)  # Remove the original, coded columns
+```
+# Subjective Data Cleanup
+The following code chunks involve more subjective transformations and edits than the above code - these are areas where folks are likely to have stronger opinions on what should be done.
+
+## Distances
+Let's convert all distance measurements to kilometers.  Note that distance values with a corresponding `distance_unit` of `NA` are not altered.
+```{r}
+data <- data %>%
+  mutate(
+    # Convert field_distance to kilometers
+    field_distance = if_else(
+      distance_units == "Miles",
+      1.60934 * field_distance,
+      field_distance
+      ),
+    # Convert nocturnal distance to kilometers
+    nocturnal_distance = if_else(
+      distance_units == "Miles",
+      1.60934 * nocturnal_distance,
+      nocturnal_distance
+      ),
+    # Now that all distances are in kilometeres, update `distance_units`, preserving NA values
+    distance_units = if_else(
+      distance_units == "Miles", 
+      "Kilometers",
+      distance_units
+      )
+    )
+```
+
+## Temperature
+Let's look at temperature. I can not definitively say whether the `temp_unit` column actually means anything, so for now we assume all temperatures are in Fahrenheit.
+
+There is a peculiar outlier, where circle `Cedar Key_US-FL` has a min temp of `4464` and a max temp of `NA` for 2012 -- this looks like a case where the `max_temp` was accidentally appended to the end of the min temp.  A range of `44` to `66` degrees seems totally reasonable for December in Florida.
+```{r}
+data <- data %>%
+  mutate(
+    # Hard-code a fix for the 2012 entry of `Cedar Key_US-FL`
+    min_temp = if_else(
+      circle_id == "Cedar Key_US-FL" & count_year == 2012,
+      44,
+      min_temp
+    ),
+    max_temp = if_else(
+      circle_id == "Cedar Key_US-FL" & count_year == 2012,
+      64,
+      max_temp
+    )
   )
 ```
 
-Does year meaningfully affect participation?
+For counts of people, distance, and hours, we fill `NA` values as 0.
 ```{r}
-library(ggplot2)
-# ggplot(data, aes(x=count_year, y=n_field_counters)) + 
-  # geom_point()
-```
-
-```{r}
-# Are the highest participation circles just new? Or have they gained particpation over time?
-p99 <- quantile(data$n_field_counters, .999, na.rm=T)
-high_participation_circles <- data %>%
-  filter(count_year==2018) %>%
-  filter(n_field_counters>=p99) %>%
-  select(circle_id)
-
-high_participation_data <- data %>% 
-  filter(circle_id %in% high_participation_circles$circle_id)
-```
-
-```{r}
-ggplot(high_participation_data, aes(x=circle_age, y=n_field_counters, color=circle_id)) + 
-  geom_line() + 
-  geom_point() + 
-  theme_minimal() + 
-  labs(
-    title="Participation by age of circle for the 8 most-attended circles in 2018"
+data <- data %>%
+  mutate(
+    feeder_hours = replace_na(feeder_hours, 0),
+    n_feeder_counters = replace_na(n_feeder_counters, 0),
+    
+    field_hours = replace_na(field_hours, 0),
+    n_field_counters = replace_na(n_field_counters, 0),
+    
+    nocturnal_hours = replace_na(nocturnal_hours, 0),
+    nocturnal_distance = replace_na(nocturnal_distance, 0),
+    
+    field_distance = replace_na(field_distance, 0)
+    
   )
+```
+
+There are a handful of temperature outliers -- We'll just remove anything with a max or min temperature over 150 degrees.
+```{r}
+max_allowed_temperature = 150  # F or C, anything over this is silly
+
+# Let's write out the rows we are filtering, just so people can see.
+temperature_outliers <- data %>%
+  filter(max_temp > max_allowed_temperature | min_temp > max_allowed_temperature)
+write_tsv(temperature_outliers, "temperature_outliers.tsv")
+
+data2 <- data %>%
+  filter(max_temp <= max_allowed_temperature | is.na(max_temp)) %>%
+  filter(min_temp <= max_allowed_temperature | is.na(min_temp))
+```
+
+Finally, we output the cleaned up data to a new file.  Hopefully this file will be easier for stats folks to load and experiment with.
+```{r}
+write_tsv(data, "r_cleaned_data.tsv")  # Use tab-separated because circle names can have commas in them.
 ```
