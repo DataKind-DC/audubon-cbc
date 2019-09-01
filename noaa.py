@@ -3,7 +3,7 @@ from functools import partial
 import logging
 from math import cos
 from math import sqrt
-import os 
+import os
 
 import pandas as pd
 import requests
@@ -14,12 +14,12 @@ NUM_WORKERS = 6
 def calculate_distance(lat_long_pair_1, lat_long_pair_2):
     """Calculate distance between a pair of lat ands longs
 
-    TODO: possibly a more accurate, performant solution can 
+    TODO: possibly a more accurate, performant solution can
     be used
 
-    :param tuple lat_long_pair_1: 
+    :param tuple lat_long_pair_1:
         a tuple representing the lat and long coordinates
-    :param tuple lat_long_pair_2: 
+    :param tuple lat_long_pair_2:
         a tuple representing the lat and long coordinates
 
     :return: the distance between the two coordinate pairs
@@ -37,7 +37,7 @@ def calculate_distance(lat_long_pair_1, lat_long_pair_2):
 def retrieve_noaa_data(token):
     """Retrieve and create a dataframe from the NOAA API
 
-    :param str token: 
+    :param str token:
         string representing API token
 
     :return: a dataframe representing all NOAA stations
@@ -48,8 +48,8 @@ def retrieve_noaa_data(token):
 
     while True:
         res = requests.get(
-            'https://www.ncdc.noaa.gov/cdo-web/api/v2/stations', 
-            headers={'Token': token}, 
+            'https://www.ncdc.noaa.gov/cdo-web/api/v2/stations',
+            headers={'Token': token},
             params={'limit':'1000', 'offset': str(offset)})
 
         res.raise_for_status()
@@ -60,11 +60,11 @@ def retrieve_noaa_data(token):
         else:
             print(f'length of results is {len(results)}')
             offset += 1000
-            
+
     # ensure results align with the API counts
     assert len(results) == res.json()['metadata']['resultset']['count']
 
-        
+
     df = pd.DataFrame.from_dict(results)
     return df
 
@@ -72,10 +72,10 @@ def retrieve_noaa_data(token):
 def find_closest_noaa_station(noaa_stations, row):
     """Find the closest station given a row from the circle data
 
-    :param list noaa_stations: 
+    :param list noaa_stations:
         A list of dictionaries representing the NOAA stations and their
         coordinates
-    :param pandas.core.series.Series row: 
+    :param pandas.core.series.Series row:
         a row from a pandas DataFrame
 
     :return: the closest NOAA station and their coordinates
@@ -101,25 +101,25 @@ def main():
 
     Keep in mind for the this work, you will need to set an environmental variable
     titled "NOAA_API_KEY"
-    
+
     :return: a dataframe representing the circle name and their closest NOAA station
     :rtype: pandas.DataFrame
     """
-    circles_data = pd.read_csv('audubon-cbc/bird_count_cleaned_may_29_2019.csv')
-
+    circles_data = pd.read_csv('bird_count_cleaned_may_29_2019.csv')
     noaa_stations = retrieve_noaa_data(os.environ.get('NOAA_API_KEY'))
 
     noaa_pairs = [
-        {'name': row['name'], 'coordinates': (row['latitude'], row['longitude'])}
+        {
+            'name': row['name'],
+            'coordinates': (row['latitude'], row['longitude'])
+        }
         for _, row in noaa_stations.iterrows()]
     distance_callable = partial(find_closest_noaa_station, noaa_pairs)
     results = []
-
     # 6 workers on a 2017 Macbook with 16GB of memory seems
     # to be fine, please adjust to your machine's specs
     #
     # Keep in mind that this will take some time to run since there are
-
     # over 100k circle records and 130k NOAA stations to reference
     with futures.ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
         jobs = [
@@ -132,8 +132,8 @@ def main():
             LOGGER.info(output)
             results.append(output)
 
-    df = pd.Dataframe.from_dict(results)
-    return df
+    df = pd.DataFrame.from_dict(results)
+    df.to_csv('closest_station.csv', index=False)
 
 
 if __name__ == "__main__":
