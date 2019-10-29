@@ -107,6 +107,10 @@ This is a primarily Python/R setup. Please follow the standard practices of sett
   - Mapping of Audubon Circle and their closest NOAA station
   - used to determine the NOAA station and their weather readings for analysis
   - will need to dedupe because some NOAA stations may not exist at a certain time.
+- [cbc_weather_effort_1900-2018.csv](cbc_weather_effort_1900-2018.csv)
+  - Original data drop that has since been transformed to the above bird_count_cleaned_29_2019.csv
+
+## Note:  Attic is now a repository for old data
 
 ## Phases
 Phases usually follow this lifecycle. It may vary from project to project but the general phases
