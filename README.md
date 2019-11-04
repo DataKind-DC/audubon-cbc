@@ -87,7 +87,7 @@ This is a primarily Python/R setup. Please follow the standard practices of sett
 - [bird_count_cleaned_may_29_2019.csv](bird_count_cleaned_may_29_2019.csv)
   - Latest data from the Audubon Society on their circle observation
   - Data Dictonary: http://www.audubon.org/sites/default/files/documents/cbc_report_field_definitions_2013.pdf
-  - The notebook used to clean the data can be found [here](https://github.com/DataKind-DC/audubon-cbc/blob/master/audubon_eda.ipynb)
+  - The notebook used to clean the data can be found [here](https://github.com/DataKind-DC/audubon-cbc/blob/master/audubon_world.ipynb)
   - All the numeric values appear to possible (perhaps with exception of the maximum number of hours for some tasks. 
   - Note that impossible values for derived columns with _imperial_ and _metric_ suffixes were replaced with NaN. The original column values were not replaced (e.g. max_wind wasn't replaced). 
   - Outliers remain.
