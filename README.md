@@ -110,7 +110,30 @@ This is a primarily Python/R setup. Please follow the standard practices of sett
 - [cbc_weather_effort_1900-2018.csv](cbc_weather_effort_1900-2018.csv)
   - Original data drop that has since been transformed to the above bird_count_cleaned_29_2019.csv
 
-## Note:  Attic is now a repository for old data
+**Note:  Attic is now a repository for old data**
+
+### Contributing
+Anyone is able to contribute! Please follow the steps for a (hopefully) pain-free experience submitting a pull request (PR)
+- First, clone the repo `git clone https://github.com/DataKind-DC/audubon-cbc.git`
+- After that, create a new branch to work off of
+  - you are free to name the branch however you like, however it is best to format it as `<purpose>/<name>`
+    - where purpose can be `feature`, `debug`, `refactor`, or any other short form word to _describe_ the purpose of the PR
+    - the `<name>` can be whatever you want to be
+    - for example:
+      - the name `feature/new_noaa_stations` will tell me this is a new feature regarding NOAA stations
+      - the name `refactor/csv_parsing` will signal that this is a rewrite of a specific function of the repo
+  - you can create a new branch with `git branch -b <purpose>/<name>`
+- Work on the branch as you would normally, committing changes as you please
+- After you feel confident of your changes, head over to the [Pull Request](https://github.com/DataKind-DC/audubon-cbc/pulls) page
+  and click on `New Pull Request`
+- A page will show up with two field boxes with an arrow pointing from the right box to the left; this indicates the branch you are
+  attempting to merge (right field) into the desired branch (left field)
+  - for the right field, pick your branch, make sure you push up your changes first (`git push `)
+- Follow the instructions and fill out the necessary information in the PR template
+- Tag the appropriate person to review your work, see the [Team Member](#team-members) if you are unsure
+- Your reviewer (should) provide feedback and you will make commits to your branch to reflect the necessary changes
+- If all goes well, your reviewer will accept the PR and merge into master, CONGRATS!
+
 
 ## Phases
 Phases usually follow this lifecycle. It may vary from project to project but the general phases
