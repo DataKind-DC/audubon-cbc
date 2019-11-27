@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Audubon PR
+    url: https://github.com/DataKind-DC/audubon-cbc/pulls
+    about: Please use the following link to create a new issue/PR
