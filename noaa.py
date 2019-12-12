@@ -3,6 +3,7 @@ from functools import partial
 import logging
 from math import cos
 from math import sqrt
+from geopy import distance
 import os
 
 import pandas as pd
@@ -12,27 +13,20 @@ LOGGER = logging.getLogger(__name__)
 NUM_WORKERS = 6
 
 def calculate_distance(lat_long_pair_1, lat_long_pair_2):
-    """Calculate distance between a pair of lat ands longs
-
-    TODO: possibly a more accurate, performant solution can
-    be used
-
+    """The geodesic distance is the shortest distance on the surface of an ellipsoidal model of the earth. 
+    The default algorithm uses the method is given by Karney (2013) (geodesic); 
+    this is accurate to round-off and always converges.
+    https://geopy.readthedocs.io/en/stable/index.html#module-geopy.distance
+    
     :param tuple lat_long_pair_1:
         a tuple representing the lat and long coordinates
     :param tuple lat_long_pair_2:
         a tuple representing the lat and long coordinates
 
-    :return: the distance between the two coordinate pairs
+    :return: the distance in Km. between the two coordinate pairs
     :rtype: float
     """
-    lat1, lng1 = lat_long_pair_1[0], lat_long_pair_1[1]
-    lat2, lng2 = lat_long_pair_2[0], lat_long_pair_2[1]
-
-    r = 6371000 # radius of the Earth in m
-
-    x = (lng2 - lng1) * cos(0.5*(lat2+lat1))
-    y = (lat2 - lat1)
-    return r * sqrt( x * x + y * y )
+    return distance.distance(lat_long_pair_1, lat_long_pair_2).km
 
 def retrieve_noaa_data(token):
     """Retrieve and create a dataframe from the NOAA API
