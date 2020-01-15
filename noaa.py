@@ -1,38 +1,50 @@
 from concurrent import futures
+import datetime
 from functools import partial
 import logging
-from math import cos
-from math import sqrt
+import math
 import os
 
+# from geopy.distance import geodesic
 import pandas as pd
 import requests
 
-LOGGER = logging.getLogger(__name__)
-NUM_WORKERS = 6
 
-def calculate_distance(lat_long_pair_1, lat_long_pair_2):
-    """Calculate distance between a pair of lat ands longs
+logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG)
+NUM_WORKERS = 12
 
-    TODO: possibly a more accurate, performant solution can
-    be used
 
-    :param tuple lat_long_pair_1:
-        a tuple representing the lat and long coordinates
-    :param tuple lat_long_pair_2:
-        a tuple representing the lat and long coordinates
+def haversine_formula(coord1, coord2):
+    """Haversine Forumla for calculating distance between two
+    coordinates in meters.
 
-    :return: the distance between the two coordinate pairs
+    Distaince is similar to the GeoPy distance formulas except
+    the geopy formula uses Vincenty’s formula. At longer distances,
+    the difference is much more pronounced, however, since we are trying
+    to find the closest one, the Haversine formula is a suitable
+    approximation for our purposes.
+
+    :param set coord1:
+        A set containing the lat and long of the first location
+    :param set coord1:
+        A set containing the lat and long of the second location
+
+    :return: distance between two sets in meters
     :rtype: float
     """
-    lat1, lng1 = lat_long_pair_1[0], lat_long_pair_1[1]
-    lat2, lng2 = lat_long_pair_2[0], lat_long_pair_2[1]
+    R = 6372800  # Earth radius in meters
+    lat1, lon1 = coord1
+    lat2, lon2 = coord2
 
-    r = 6371000 # radius of the Earth in m
+    phi1, phi2 = math.radians(lat1), math.radians(lat2)
+    dphi = math.radians(lat2 - lat1)
+    dlambda = math.radians(lon2 - lon1)
 
-    x = (lng2 - lng1) * cos(0.5*(lat2+lat1))
-    y = (lat2 - lat1)
-    return r * sqrt( x * x + y * y )
+    a = math.sin(dphi / 2)**2 + \
+        math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2)**2
+
+    return 2*R*math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
 
 def retrieve_noaa_data(token):
     """Retrieve and create a dataframe from the NOAA API
@@ -63,8 +75,6 @@ def retrieve_noaa_data(token):
 
     # ensure results align with the API counts
     assert len(results) == res.json()['metadata']['resultset']['count']
-
-
     df = pd.DataFrame.from_dict(results)
     return df
 
@@ -82,18 +92,23 @@ def find_closest_noaa_station(noaa_stations, row):
     :rtype: dict
     """
     lat_lng_pair = (row['lat'], row['lon'])
-    dist_calc = partial(calculate_distance, lat_lng_pair)
-    closest_noaa = sorted(
-        noaa_stations, key = lambda d: dist_calc((d['coordinates'])))[0]
-    result = {
-        'circle_name': row['circle_name'],
+    shortest = pd.np.Inf
 
-        'circle_coordinates': lat_lng_pair,
+    for station in noaa_stations:
+        calc_distance = haversine_formula(station['coordinates'], lat_lng_pair)
+        if  calc_distance < shortest:
+            closest_noaa = {
+                'circle_name': row['circle_name'],
+                'circle_lat': row['lat'],
+                'circle_lng': row['lon'],
+                'closest_station_name': station['name'],
+                'closest_station_lat': station['coordinates'][0],
+                'closest_station_lng': station['coordinates'][-1],
+                'distance': calc_distance,
+            }
+            shortest = calc_distance
 
-        'closest_station': closest_noaa['name'],
-        'closest_coordinates': closest_noaa['coordinates']
-    }
-    return result
+    return closest_noaa
 
 
 def main():
@@ -107,7 +122,9 @@ def main():
     """
     circles_data = pd.read_csv('bird_count_cleaned_may_29_2019.csv')
     noaa_stations = retrieve_noaa_data(os.environ.get('NOAA_API_KEY'))
-
+    noaa_stations['maxdate'] = pd.to_datetime(noaa_stations['maxdate'])
+    noaa_stations = noaa_stations.loc[noaa_stations['maxdate'] < pd.Timestamp(2020, 1, 1)]
+    noaa_stations.to_csv('noaa_stations.csv.gz', index=False)
     noaa_pairs = [
         {
             'name': row['name'],
@@ -126,14 +143,16 @@ def main():
             executor.submit(distance_callable, row)
             for _, row in circles_data.iterrows()]
 
-
         for job in futures.as_completed(jobs):
             output = job.result()
-            LOGGER.info(output)
+            logging.info(
+                'closest NOAA to %s, is %s, with a distance of %s meters',
+                output['circle_name'],
+                output['closest_station_name'],
+                output['distance'])
             results.append(output)
-
     df = pd.DataFrame.from_dict(results)
-    df.to_csv('closest_station.csv', index=False)
+    df.to_csv('closest_station.csv.gz', index=False)
 
 
 if __name__ == "__main__":
