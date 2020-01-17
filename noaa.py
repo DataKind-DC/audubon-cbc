@@ -5,7 +5,6 @@ import logging
 import math
 import os
 
-# from geopy.distance import geodesic
 import pandas as pd
 import requests
 
