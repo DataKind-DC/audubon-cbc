@@ -71,9 +71,7 @@ The data are primarily flat files saved to Github since they are not the largest
 The file bird_count_cleaned_may_29_2019.csv is the cleanest data to date and was produced by the audubon_world.ipynb file. 
 
 ## Official Weather Date: Google BigQuery and Weather data
-To obtain the daily measures of weather data, we will be using the GHCN Daily database powered by Google.
-
-https://console.cloud.google.com/marketplace/details/noaa-public/ghcn-d?filter=solution-type:dataset&id=9d500d1d-fda4-4413-a789-d8786fd6592e&pli=1
+To obtain the daily measures of weather data, we will be using the GHCN Daily database powered by Google [here] (https://console.cloud.google.com/marketplace/details/noaa-public/ghcn-d?filter=solution-type:dataset&id=9d500d1d-fda4-4413-a789-d8786fd6592e&pli=1)"
 
 Take a look around.
 Of Note - each year of the dataset is divided into its own table. So 2019 data is in ghcn_2019.  
