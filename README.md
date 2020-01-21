@@ -100,13 +100,13 @@ This is a primarily Python/R setup. Please follow the standard practices of sett
     - MIN_SNOW - Representative lower range for snow depth, reported to the nearest 0.25 inches; reported as 0 if there was no snow; stored in inches
     - MAX_SNOW - Representative upper range for snow depth, reported to the nearest 0.25 inches;
     reported as 0 if there was no snow; stored in inches
-- [noaa_stations.csv](noaa_stations.csv)
+- [noaa_stations_2020_01_17.csv.gz](noaa_stations.csv)
   - list of all NOAA stations and their associated metadata.
   - This is pulled from the NOAA API
-- [output.csv](output.csv)
+- [closest_station_2020_01_20.csv.gz](output.csv)
   - Mapping of Audubon Circle and their closest NOAA station
   - used to determine the NOAA station and their weather readings for analysis
-  - will need to dedupe because some NOAA stations may not exist at a certain time.
+  - Special attention was given to making sure the station existed at least up until 2020-01-01
 - [cbc_weather_effort_1900-2018.csv](cbc_weather_effort_1900-2018.csv)
   - Original data drop that has since been transformed to the above bird_count_cleaned_29_2019.csv
 
