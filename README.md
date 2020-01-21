@@ -103,7 +103,7 @@ This is a primarily Python/R setup. Please follow the standard practices of sett
 - [noaa_stations_2020_01_17.csv.gz](noaa_stations.csv)
   - list of all NOAA stations and their associated metadata.
   - This is pulled from the NOAA API
-- [closest_station_2020_01_17.csv.gz](output.csv)
+- [closest_station_2020_01_20.csv.gz](output.csv)
   - Mapping of Audubon Circle and their closest NOAA station
   - used to determine the NOAA station and their weather readings for analysis
   - Special attention was given to making sure the station existed at least up until 2020-01-01

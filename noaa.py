@@ -104,6 +104,7 @@ def find_closest_noaa_station(noaa_stations, row):
                 'closest_station_lat': station['coordinates'][0],
                 'closest_station_lng': station['coordinates'][-1],
                 'distance': calc_distance,
+                'closest_station_id': station['id']
             }
             shortest = calc_distance
 
@@ -127,7 +128,8 @@ def main():
     noaa_pairs = [
         {
             'name': row['name'],
-            'coordinates': (row['latitude'], row['longitude'])
+            'coordinates': (row['latitude'], row['longitude']),
+            'id': row['id']
         }
         for _, row in noaa_stations.iterrows()]
     distance_callable = partial(find_closest_noaa_station, noaa_pairs)
