@@ -35,6 +35,12 @@ Given the data types and research questions for the Particpation Research Questi
    - make a determination on if weather data provided by cbc participants is valuble to collect.
 
 #### Known Next Steps
+Designing the Models 
+Look below on the onboarding steps for info on latest data and data sources. 
+We have Audubon Society submitted Volunteer weather data and an 'official' source of weather data.
+  - TASK: We need to define how we will determine if these values are the 'same' or 'different'. Add the steps you will like to see happen to this ticket: Steps for Investigating If Weather Data is the 'Same'
+
+
 The previous Team of Volenteers has left a todo list to finish cleaning the cbc data
   - Numeric data (temperature, snow, wind, distance):
     - Convert to same unit (Done!)
@@ -44,9 +50,9 @@ The previous Team of Volenteers has left a todo list to finish cleaning the cbc 
   - For categorical data:
     - TASK: Encode appropriately
        - Composites -> if no 4 then take average and treat as new category, 4 trumps all
+    - TASK - Visualize the Weather data (Temp, Precipitation) over time
  Logitutial Check
   - Age of circles - older circles are more numerous
-    - TASK: Check for Outlieres Any outliers for these
     - TASK: Question: Should All circles be used or should we limit the circles in the final data set
   - Open Questions:
     - what does snow_unit stand for?
@@ -60,12 +66,16 @@ The previous Team of Volenteers has left a todo list to finish cleaning the cbc 
 The data are primarily flat files saved to Github since they are not the largest files. Down the road, we can consider saving them to S3 or GCS.
 
 ### Onboarding
-#### Weather Data API
-  For the weather data, DataKind needs to understand what weather data is avilible for the past based on lat long data (that we have from the cbc data file)
 
-The NOAA API should be good for this. The smallest and most precise unit in the NOAA data is for a Station. Via the NOAA api we can list of all the stations and their lat long data. I think the next task will be to write a script that finds the closest NOAA station to each of the circles in the data set.
+## Cleanest Volenteer Submitted Data
+The file bird_count_cleaned_may_29_2019.csv is the cleanest data to date and was produced by the audubon_world.ipynb file. 
 
-To get started with the NOAA API, this site is pretty good. https://grantwinney.com/day-7-noaa-api/.
+## Official Weather Date: Google BigQuery and Weather data
+To obtain the daily measures of weather data, we will be using the GHCN Daily database powered by Google [here] (https://console.cloud.google.com/marketplace/details/noaa-public/ghcn-d?filter=solution-type:dataset&id=9d500d1d-fda4-4413-a789-d8786fd6592e&pli=1)"
+
+Take a look around.
+Of Note - each year of the dataset is divided into its own table. So 2019 data is in ghcn_2019.  
+
 
 #### Resources
 Read these brief pages for background:
