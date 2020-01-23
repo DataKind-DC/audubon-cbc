@@ -21,18 +21,18 @@ The general questions we are trying to answer are, "what are the geographic, soc
 
 
 ## Deliverables
-__1. What relationship, if any, exsists between geographic, socioeconomic, or climatic correlates features and CBC participation and effort for the chirstmas birdcouter?__
+__1. What relationship, if any, exists between geographic, socioeconomic, or climatic correlates features and CBC participation and effort for the Christmas birdcounter?__
 
-  Volenteers For this Research Question will produce descriptive anaylsis and predictive modeling to examine if a relationship can be determined.
+  Volunteers For this Research Question will produce descriptive analysis and predictive modeling to examine if a relationship can be determined.
 
-Given the data types and research questions for the Particpation Research Question, it would be benifical to have volenteers design table shells for metrics that would help answer the research question and model designs they would like to see implemented. These shells and designs should include notes on any data aggrgations or transformations that would be required by a tech side.
+Given the data types and research questions for the Participation Research Question, it would be beneficial to have volunteers design table shells for metrics that would help answer the research question and model designs they would like to see implemented. These shells and designs should include notes on any data aggregations or transformations that would be required by a tech side.
 
  __2. Should the Audubon society continue to collect weather data during the Christmas Bird Count?__
 
-   Volenteers will
-   - Examine the weather data avilible in the cbc data for completness and trends
-   - connect with a source of weather data (NOAA has been suggested) to determine the past accuraccy of weather data recorded by particpants
-   - make a determination on if weather data provided by cbc participants is valuble to collect.
+   Volunteers will
+   - Examine the weather data available in the cbc data for completeness and trends
+   - connect with a source of weather data (NOAA has been suggested) to determine the past accuracy of weather data recorded by participants
+   - make a determination on if weather data provided by cbc participants is valuable to collect.
 
 #### Known Next Steps
 Designing the Models 
@@ -41,17 +41,17 @@ We have Audubon Society submitted Volunteer weather data and an 'official' sourc
   - TASK: We need to define how we will determine if these values are the 'same' or 'different'. Add the steps you will like to see happen to this ticket: Steps for Investigating If Weather Data is the 'Same'
 
 
-The previous Team of Volenteers has left a todo list to finish cleaning the cbc data
+The previous Team of Volunteers has left a todo list to finish cleaning the cbc data
   - Numeric data (temperature, snow, wind, distance):
     - Convert to same unit (Done!)
-    - Impute missing values and Invesitgate Outliers
-      - TASK: Need to invesigate the Outliers and determine if they are most likly typos or data
+    - Impute missing values and Investigate Outliers
+      - TASK: Need to investigate the Outliers and determine if they are most likely typos or data
     - Standardize/normalize
   - For categorical data:
     - TASK: Encode appropriately
        - Composites -> if no 4 then take average and treat as new category, 4 trumps all
     - TASK - Visualize the Weather data (Temp, Precipitation) over time
- Logitutial Check
+ Longitudinal Check
   - Age of circles - older circles are more numerous
     - TASK: Question: Should All circles be used or should we limit the circles in the final data set
   - Open Questions:
@@ -67,7 +67,7 @@ The data are primarily flat files saved to Github since they are not the largest
 
 ### Onboarding
 
-## Cleanest Volenteer Submitted Data
+## Cleanest Volunteer Submitted Data
 The file bird_count_cleaned_may_29_2019.csv is the cleanest data to date and was produced by the audubon_world.ipynb file. 
 
 ## Official Weather Date: Google BigQuery and Weather data
@@ -96,7 +96,7 @@ This is a primarily Python/R setup. Please follow the standard practices of sett
 ### Datasets
 - [bird_count_cleaned_may_29_2019.csv](bird_count_cleaned_may_29_2019.csv)
   - Latest data from the Audubon Society on their circle observation
-  - Data Dictonary: http://www.audubon.org/sites/default/files/documents/cbc_report_field_definitions_2013.pdf
+  - Data Dictionary: http://www.audubon.org/sites/default/files/documents/cbc_report_field_definitions_2013.pdf
   - The notebook used to clean the data can be found [here](https://github.com/DataKind-DC/audubon-cbc/blob/master/audubon_world.ipynb)
   - All the numeric values appear to possible (perhaps with exception of the maximum number of hours for some tasks.
   - Note that impossible values for derived columns with _imperial_ and _metric_ suffixes were replaced with NaN. The original column values were not replaced (e.g. max_wind wasn't replaced).
