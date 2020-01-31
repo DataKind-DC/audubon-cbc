@@ -10,8 +10,8 @@ assignees: ''
 # High Level Changes
 _Please provide a (hopefully) one sentence summary of your pull request_
 
-# Necesary Details
+# Necessary Details
 _State any details in your pull request that you feel are necessary to understand it_
 
 # Reviewer Notes
-_Add any notes you wish the reviewer to be considerate of when reviewing the pull request_
+_Add any notes you wish the reviewer to consider when reviewing the pull request_
