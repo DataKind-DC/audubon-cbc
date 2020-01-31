@@ -1,3 +1,31 @@
+# -*- coding: utf-8 -*-
+"""match_with_noaa_stations
+
+Script will match Chirstmas Birdcount locations with
+the closest NOAA station. 
+
+The matching will occur based on distance and the time 
+period the stations were operating.
+
+If a NOAA station file is not provided, the script will 
+collect NOAA stations from www.ncdc.noaa.gov/
+
+
+Inputs
+------
+- A Christmas Birdcount file (CSV)
+If providing a file
+- NOAA station file (CSV)
+
+If Not Providing a station file
+- NOAA API access key
+
+Outputs
+-------
+A CSV.GZ file called closest_stations
+
+"""
+
 from concurrent import futures
 import datetime
 from functools import partial
@@ -8,26 +36,41 @@ import os
 import pandas as pd
 import requests
 
+""" Set the Path of the Input Files """
+NOAA_STATIONS_PATH = "station_inventory_cheater.csv"
+CBC_FILE_PATH = "cleaned_cbc_usa.csv"
+
+"""## Load in the NOAA Station Data"""
+
+noaa_sations = pd.read_csv(NOAA_STATIONS_PATH, encoding = "latin-1")
+
+print(noaa_sations.shape)
+noaa_sations.head()
+print("NOAA Stations Loaded")
+
+"""## Add in the Cleaned CBC Data"""
+
+cbc_usa = pd.read_csv(CBC_FILE_PATH, encoding = "latin-1")
+
+print(cbc_usa.shape)
+cbc_usa.head()
+print("CBC Data Loaded")
 
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG)
 NUM_WORKERS = 12
 
-
 def haversine_formula(coord1, coord2):
     """Haversine Forumla for calculating distance between two
     coordinates in meters.
-
     Distaince is similar to the GeoPy distance formulas except
     the geopy formula uses Vincenty’s formula. At longer distances,
     the difference is much more pronounced, however, since we are trying
     to find the closest one, the Haversine formula is a suitable
     approximation for our purposes.
-
     :param set coord1:
         A set containing the lat and long of the first location
     :param set coord1:
         A set containing the lat and long of the second location
-
     :return: distance between two sets in meters
     :rtype: float
     """
@@ -44,13 +87,10 @@ def haversine_formula(coord1, coord2):
 
     return 2*R*math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
-
 def retrieve_noaa_data(token):
     """Retrieve and create a dataframe from the NOAA API
-
     :param str token:
         string representing API token
-
     :return: a dataframe representing all NOAA stations
     :rtype: pandas.DataFrame
     """
@@ -77,61 +117,66 @@ def retrieve_noaa_data(token):
     df = pd.DataFrame.from_dict(results)
     return df
 
-
 def find_closest_noaa_station(noaa_stations, row):
     """Find the closest station given a row from the circle data
-
     :param list noaa_stations:
         A list of dictionaries representing the NOAA stations and their
         coordinates
     :param pandas.core.series.Series row:
         a row from a pandas DataFrame
-
     :return: the closest NOAA station and their coordinates
     :rtype: dict
     """
     lat_lng_pair = (row['lat'], row['lon'])
+    count_year = pd.to_datetime(row['count_date']).year
     shortest = pd.np.Inf
 
     for station in noaa_stations:
         calc_distance = haversine_formula(station['coordinates'], lat_lng_pair)
-        if  calc_distance < shortest:
+        #if  calc_distance < shortest:
+        if  calc_distance < shortest and count_year >= station['firstyear'] and count_year <= station['lastyear']:
             closest_noaa = {
                 'circle_name': row['circle_name'],
+                'circle_num': row['Unnamed__0'],
                 'circle_lat': row['lat'],
                 'circle_lng': row['lon'],
-                'closest_station_name': station['name'],
+                #'closest_station_name': station['name'],
                 'closest_station_lat': station['coordinates'][0],
                 'closest_station_lng': station['coordinates'][-1],
                 'distance': calc_distance,
-                'closest_station_id': station['id']
+                'closest_station_id': station['id'],
+                'cbc_count_year': count_year
             }
             shortest = calc_distance
 
     return closest_noaa
 
-
-def main():
+def main(circles_data, noaa_stations, use_noaa_file = True):
     """Main callable to execute script
-
     Keep in mind for the this work, you will need to set an environmental variable
     titled "NOAA_API_KEY"
-
     :return: a dataframe representing the circle name and their closest NOAA station
     :rtype: pandas.DataFrame
     """
-    circles_data = pd.read_csv('bird_count_cleaned_may_29_2019.csv')
-    noaa_stations = retrieve_noaa_data(os.environ.get('NOAA_API_KEY'))
-    noaa_stations['maxdate'] = pd.to_datetime(noaa_stations['maxdate'])
-    noaa_stations = noaa_stations.loc[noaa_stations['maxdate'] < pd.Timestamp(2020, 1, 1)]
-    noaa_stations.to_csv('noaa_stations.csv.gz', index=False)
+    #circles_data = pd.read_csv('bird_count_cleaned_may_29_2019.csv')
+
+    if not use_noaa_file:
+      noaa_stations = retrieve_noaa_data(os.environ.get('NOAA_API_KEY'))
+      noaa_stations['maxdate'] = pd.to_datetime(noaa_stations['maxdate'])
+      noaa_stations = noaa_stations.loc[noaa_stations['maxdate'] < pd.Timestamp(2020, 1, 1)]
+      noaa_stations.to_csv('noaa_stations.csv.gz', index=False)
+
+
     noaa_pairs = [
         {
-            'name': row['name'],
+            'id': row['id'],
             'coordinates': (row['latitude'], row['longitude']),
-            'id': row['id']
+            'firstyear': row['firstyear'],
+            'lastyear': row['lastyear'],
+         
         }
         for _, row in noaa_stations.iterrows()]
+
     distance_callable = partial(find_closest_noaa_station, noaa_pairs)
     results = []
     # 6 workers on a 2017 Macbook with 16GB of memory seems
@@ -149,12 +194,16 @@ def main():
             logging.info(
                 'closest NOAA to %s, is %s, with a distance of %s meters',
                 output['circle_name'],
-                output['closest_station_name'],
+                output['closest_station_id'],
                 output['distance'])
             results.append(output)
     df = pd.DataFrame.from_dict(results)
-    df.to_csv('closest_station.csv.gz', index=False)
+    df.to_csv('closest_stations.csv.gz', index=False)
+    return(df)
 
+# Run the main function to match
+#main(circles_data_smol,noaa_sations)
+closest_stations = main(cbc_usa,noaa_sations)
 
-if __name__ == "__main__":
-    main()
+closest_stations.head()
+
