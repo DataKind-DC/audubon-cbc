@@ -94,10 +94,10 @@ http://www.audubon.org/sites/default/files/documents/cbc_report_field_definition
 This is a primarily Python/R setup. Please follow the standard practices of setting up a virtualenv if using Python.
 
 ### Datasets
-- [files/bird_count_cleaned_may_29_2019.csv](bird_count_cleaned_may_29_2019.csv)
+- [files/bird_count_cleaned_may_29_2019.csv](files/bird_count_cleaned_may_29_2019.csv)
   - Latest data from the Audubon Society on their circle observation
   - Data Dictionary: http://www.audubon.org/sites/default/files/documents/cbc_report_field_definitions_2013.pdf
-  - The notebook used to clean the data can be found [here](https://github.com/DataKind-DC/audubon-cbc/blob/master/audubon_world.ipynb)
+  - The notebook used to clean the data can be found [here](https://github.com/DataKind-DC/audubon-cbc/blob/master/notebooks/audubon_world.ipynb)
   - All the numeric values appear to possible (perhaps with exception of the maximum number of hours for some tasks.
   - Note that impossible values for derived columns with _imperial_ and _metric_ suffixes were replaced with NaN. The original column values were not replaced (e.g. max_wind wasn't replaced).
   - Outliers remain.
@@ -110,14 +110,14 @@ This is a primarily Python/R setup. Please follow the standard practices of sett
     - MIN_SNOW - Representative lower range for snow depth, reported to the nearest 0.25 inches; reported as 0 if there was no snow; stored in inches
     - MAX_SNOW - Representative upper range for snow depth, reported to the nearest 0.25 inches;
     reported as 0 if there was no snow; stored in inches
-- [files/noaa_stations_2020_01_17.csv.gz](noaa_stations.csv)
+- [files/noaa_stations_2020_01_17.csv.gz](files/noaa_stations_2020_01_17.csv.gz)
   - list of all NOAA stations and their associated metadata.
   - This is pulled from the NOAA API
-- [files/closest_station_2020_01_20.csv.gz](output.csv)
+- [files/closest_station_2020_01_20.csv.gz](files/closest_station_2020_01_20.csv.gz.csv)
   - Mapping of Audubon Circle and their closest NOAA station
   - used to determine the NOAA station and their weather readings for analysis
   - Special attention was given to making sure the station existed at least up until 2020-01-01
-- [files/cbc_weather_effort_1900-2018.csv](cbc_weather_effort_1900-2018.csv)
+- [files/cbc_weather_effort_1900-2018.csv](files/cbc_weather_effort_1900-2018.csv)
   - Original data drop that has since been transformed to the above bird_count_cleaned_29_2019.csv
 
 **Note:  Attic is now a repository for old data**
