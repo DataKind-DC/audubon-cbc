@@ -106,3 +106,6 @@ venv.bak/
 
 # Lets not track data in github
 data/
+
+# Lets not track my json File Either 
+apicred/
