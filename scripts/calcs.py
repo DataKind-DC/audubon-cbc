@@ -5,6 +5,9 @@ import os
 import pandas as pd
 import numpy as np
 
+# Reference
+# Haversine: https://stackoverflow.com/questions/19412462/getting-distance-between-two-points-based-on-latitude-longitude
+
 
 def haversine_formula(coords):
     """Haversine Forumla for calculating distance between two
@@ -42,6 +45,10 @@ def main_calcs(df):
 
     # calculate distances between circles and stations
     df.loc[:, 'distance'] = df.loc[:, ['lat', 'lon', 'latitude', 'longitude']].apply(haversine_formula, axis=1)
+
+    # calculate elevation difference between circles and stations
+    df.loc[:, 'elev_diff'] = df.loc[:, 'circle_elev'] - df.loc[:, 'elevation']
+    df.loc[:, 'elev_diff'] = df.loc[:, 'elev_diff'].abs()
 
     # Convert NOAA temperatures from a tenth of a degree to degrees
     df.loc[:, 'noaa_tmax_value'] = df.loc[:, 'temp_max_value'] / 10.0 * 1.8 + 32.0
