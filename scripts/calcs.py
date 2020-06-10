@@ -54,6 +54,10 @@ def main_calcs(df):
     df.loc[:, 'noaa_tmax_value'] = df.loc[:, 'temp_max_value'] / 10.0 * 1.8 + 32.0
     df.loc[:, 'noaa_tmin_value'] = df.loc[:, 'temp_min_value'] / 10.0 * 1.8 + 32.0
 
+    # Remove temperature errors
+    df.loc[df['max_temp'] > 150.0, 'max_temp'] = np.nan
+    df.loc[df['noaa_tmax_value'] > 150.0, 'noaa_tmax_value'] = np.nan
+
     # Make variable for precipitation boolean
     df.loc[:, 'cbc_is_prec'] = (pd.notna(df.loc[:, 'min_snow']) |
                                 pd.notna(df.loc[:, 'max_snow']) |
