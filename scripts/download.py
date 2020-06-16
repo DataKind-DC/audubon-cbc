@@ -16,6 +16,7 @@ import pathlib
 # URLs for project data.
 URLS = {
     "raw": "https://drive.google.com/uc?id=1vwC_m-wFaX-4brrHOrTVqVFDZDJ6y3gN",
+    "clean": "https://drive.google.com/uc?id=1f_qNLG_WwPAUqIeLlD4uxRK4T8oK8sx0",
 }
 
 
@@ -27,26 +28,35 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
 PATHS = {
     "raw": os.path.join(ROOT, "data", "Cloud_Data",
                         "cbc_effort_weather_1900-2018.txt"),
+    "clean": os.path.join(ROOT, "data", "Cloud_Data",
+                        "1.0-rec-initial-data-cleaning.txt"),
 }
 
 
-def download_raw(url=None, path=None):
-    """Download the raw Christmas Bird Count data.
+def download_raw():
+    """Download the raw Christmas Bird Count data."""
+    download(URLS["raw"], PATHS["raw"])
+
+
+def download_clean():
+    """Download the cleaned Christmas Bird Count data.
+
+    .. note::
+       For reproducibility, it might be better to clean the raw data locally
+       rather than downloading a cleaned version from the cloud.
+    """
+    download(URLS["clean"], PATHS["clean"])
+
+
+def download(url, path):
+    """Download project data from the cloud.
 
     Args:
-        url (str): URL from which to fetch raw data.
-        path (str): Directory in which to store raw data.
+        url (str): URL from which to fetch data.
+        path (str): Directory in which to store data.
     """
-    # Use the standard URL by default.
-    if not url:
-        url = URLS["raw"]
-
-    # Use the standard path by default.
-    if not path:
-        path = os.path.dirname(PATHS["raw"])
-        
     cwd = os.getcwd()
-    os.chdir(path)
+    os.chdir(os.path.dirname(path))
     gdown.download(url)
     os.chdir(cwd)
 
@@ -56,8 +66,9 @@ if __name__ == "__main__":
     datadir = pathlib.Path(os.path.dirname(PATHS["raw"]))
     datadir.mkdir(parents=True, exist_ok=True)
 
-    # Download the raw data if the file doesn't already exist.
-    if os.path.isfile(PATHS["raw"]):
-        print(PATHS["raw"], "already exists.")
-    else:
-        download_raw()
+    # Download the each file if it doesn't already exist.
+    for file in ["raw", "clean"]:
+        if os.path.isfile(PATHS[file]):
+            print(PATHS[file], "already exists.")
+        else:
+            download(URLS[file], PATHS[file])
