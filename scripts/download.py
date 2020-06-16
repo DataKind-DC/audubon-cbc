@@ -62,7 +62,7 @@ def download(url, path):
 
 
 if __name__ == "__main__":
-    # Make the data/raw/ directory if it doesn't exist.
+    # Make the data/Cloud_Data/ directory if it doesn't exist.
     datadir = pathlib.Path(os.path.dirname(PATHS["raw"]))
     datadir.mkdir(parents=True, exist_ok=True)
 
