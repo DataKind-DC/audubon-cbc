@@ -25,7 +25,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
 
 # Paths to project directories.
 PATHS = {
-    "raw": os.path.join(ROOT, "data", "raw"),
+    "raw": os.path.join(ROOT, "data", "Cloud_Data"),
 }
 
 
