@@ -54,5 +54,9 @@ if __name__ == "__main__":
     # Make the data/raw/ directory if it doesn't exist.
     pathlib.Path(PATHS["raw"]).mkdir(parents=True, exist_ok=True)
 
-    # Download the raw data.
-    download_raw()
+    # Download the raw data if the file doesn't already exist.
+    filename = os.path.join(PATHS["raw"], "cbc_effort_weather_1900-2018.txt")
+    if os.path.isfile(filename):
+        print(filename, "already exists.")
+    else:
+        download_raw()
