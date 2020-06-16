@@ -25,7 +25,8 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
 
 # Paths to project directories.
 PATHS = {
-    "raw": os.path.join(ROOT, "data", "Cloud_Data"),
+    "raw": os.path.join(ROOT, "data", "Cloud_Data",
+                        "cbc_effort_weather_1900-2018.txt"),
 }
 
 
@@ -42,7 +43,7 @@ def download_raw(url=None, path=None):
 
     # Use the standard path by default.
     if not path:
-        path = PATHS["raw"]
+        path = os.path.dirname(PATHS["raw"])
         
     cwd = os.getcwd()
     os.chdir(path)
@@ -52,11 +53,11 @@ def download_raw(url=None, path=None):
 
 if __name__ == "__main__":
     # Make the data/raw/ directory if it doesn't exist.
-    pathlib.Path(PATHS["raw"]).mkdir(parents=True, exist_ok=True)
+    datadir = pathlib.Path(os.path.dirname(PATHS["raw"]))
+    datadir.mkdir(parents=True, exist_ok=True)
 
     # Download the raw data if the file doesn't already exist.
-    filename = os.path.join(PATHS["raw"], "cbc_effort_weather_1900-2018.txt")
-    if os.path.isfile(filename):
-        print(filename, "already exists.")
+    if os.path.isfile(PATHS["raw"]):
+        print(PATHS["raw"], "already exists.")
     else:
         download_raw()
