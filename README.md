@@ -9,7 +9,7 @@ The primary question addressed by this repository is if volunteer submitted weat
 
 The secondary questions we are trying to answer are, "What are the geographic, socioeconomic, or climatic correlates of different types of CBC participation and effort? Is it possible to model and predict participation and effort?".  (Keep in mind that some years, counts could be cancelled due to nasty weather. There will not be a record for that count during that year.  Field counters, parties, hours, and distances make up the largest chunks of effort and are the most interesting to us.)
 
-As of the time of writing (August 2020) only work on the primary question has been done. 
+As of the time of writing (September 2020) only work on the primary question has been done. 
 
 ## Table of Contents
 - [Team Members](#team-members)
@@ -26,6 +26,26 @@ As of the time of writing (August 2020) only work on the primary question has be
      - Core Volunteer
      - [minh5](https://github.com/minh5)
 
+- Hamza 
+    - Volenteer and Analytics superstar
+    - https://github.com/hamzaelsaawy
+- Ian 
+    - Volenteer and Data API wrangaler
+    - hhttps://github.com/ijd5004
+- Jacob Ellena 
+    - Volenteer and Research and Analytics Enthusiant 
+    - https://github.com/jellena
+    
+- Hamza 
+    - Volenteer and Analytics Superstar
+    - https://github.com/hamzaelsaawy
+    
+- Francisco J Vannini R
+    - Volenteer and Google BigQuery Master
+    - https://github.com/Frankie-Figz
+    
+- Nathan Pavlovic
+    - Volenteer and ArcGIS Hero
 
 ## Deliverables
  __1. Should the Audubon society continue to collect weather data during the Christmas Bird Count?__
@@ -34,7 +54,7 @@ As of the time of writing (August 2020) only work on the primary question has be
    - Examined the weather data available in the cbc data for completeness and trends
    - Connected the cbc data with a source of weather data (NOAA ghcn_d database as provided by Google BigQuery) to determine the accuracy of weather data recorded by participants
    - Collected data on Elevation and Ecosystems for the cbc circles and the NOAA stations
-   - **In Progress**Make a determination on if weather data provided by cbc participants is valuable to collect.
+   - Made a determination on if weather data provided by cbc participants is valuable to collect.
 
 __2. (On Hold) What relationship, if any, exists between geographic, socioeconomic, or climatic correlates features and CBC participation and effort for the Christmas birdcounter?__
 
@@ -119,7 +139,13 @@ Anyone is able to contribute! Please follow the steps for a (hopefully) pain-fre
  - Get the data.  Go to this folder and download it: https://drive.google.com/drive/folders/1Nlj9Nq-_dPFTDbrSDf94XMritWYG6E2I
 Paste it into the data folder in your local repository. The path should look like this: audubon-cbc/data/Cloud_Data/
  - Work though the notebook [1.2-ijd-fetch-circle-elevations.ipynb](https://github.com/DataKind-DC/audubon-cbc/blob/master/notebooks/1.2-ijd-fetch-circle-elevations.ipynb "1.2-ijd-fetch-circle-elevations.ipynb") to understand the workflow of the notebooks.
- - Work on the branch as you would normally, committing changes as you please. Use the example notebook [here](https://github.com/DataKind-DC/audubon-cbc/blob/master/notebooks/0.0-rec-example-notebook-with-header.ipynb) to set up your notebooks if you are creating a new notebook.  If you are working on an issue, be sure to include the issue number in your commit messages. Example: "This is a commit message for issue #30". Using the #<Number> will autmatically tie your updates to the issue.
+
+### Before doing any work ... 
+Use the example notebook [here](https://github.com/DataKind-DC/audubon-cbc/blob/master/notebooks/0.0-rec-example-notebook-with-header.ipynb) to set up your notebooks if you are creating a new notebook.  
+
+This notebook will also provide an example of 1) How to structure your notebooks 2) Now to name your notebooks so they flow sequentially down the workflow and 3) how to name the output file. Output files will be named after the notebook that produced them.
+
+If you are working on an issue, be sure to include the issue number in your commit messages. Example: "This is a commit message for issue #30". Using the #<Number> will autmatically tie your updates to the issue.
 
 ### Contributing
  - After you feel confident of your changes, head over to the [Pull Request](https://github.com/DataKind-DC/audubon-cbc/pulls) page
