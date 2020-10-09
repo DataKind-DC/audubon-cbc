@@ -112,3 +112,7 @@ data/
 
 # Lets not track my json File Either 
 apicred/
+
+# Lets not track plots in github
+plots/
+
