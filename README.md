@@ -82,6 +82,14 @@ To obtain the daily measures of weather data, we will be using the GHCN Daily da
 Take a look around.
 Of Note - each year of the dataset is divided into its own table. So 2019 data is in ghcn_2019.
 
+## Final Dataset Used for Analysis
+The final dataset used for analysis the the result of taking the Cleanest Voulenteer Submitted Data as passing it through all the notebooks up to 1.3-rec-connecting-fips-ecosystem-data.ipynb. 
+
+This file is then uses in the 2.X analysis notebooks.  
+DataDictonary: https://docs.google.com/spreadsheets/d/1p0JmDn0sIwxFJ81fDVeoykOOIixqhq0_nfqnuBcwceM/edit?usp=sharing
+Dataset: 1.3-rec-connecting-fips-ecosystem-data.txt
+https://drive.google.com/file/d/14C6CWePp-X-6b0Y2kFh92AGxd_jxr16y/view?usp=sharing
+
 
 #### Resources
 Read these brief pages for background:
