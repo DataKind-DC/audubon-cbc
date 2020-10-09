@@ -97,6 +97,9 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
+# VS Code project settings
+.vscode
+
 # mkdocs documentation
 /site
 
@@ -112,3 +115,4 @@ apicred/
 
 # Lets not track plots in github
 plots/
+
