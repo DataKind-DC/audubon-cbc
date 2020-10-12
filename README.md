@@ -46,6 +46,9 @@ As of the time of writing (September 2020) only work on the primary question has
     
 - Nathan Pavlovic
     - Volenteer and ArcGIS Hero
+    
+- Jason Hemmendinger 
+    - GHCN_d Data Wrangler
 
 ## Deliverables
  __1. Should the Audubon society continue to collect weather data during the Christmas Bird Count?__
