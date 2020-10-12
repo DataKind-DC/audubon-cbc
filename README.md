@@ -25,6 +25,8 @@ As of the time of writing (September 2020) only work on the primary question has
   - Minh Mai
      - Core Volunteer
      - [minh5](https://github.com/minh5)
+  - Jeff Hale 
+    - Data Ambassador    
 
 - Hamza 
     - Volenteer and Analytics superstar
@@ -49,6 +51,11 @@ As of the time of writing (September 2020) only work on the primary question has
     
 - Jason Hemmendinger 
     - GHCN_d Data Wrangler
+    
+- Nathan Wyand
+  - NCEI Data Wranger
+  
+
 
 ## Deliverables
  __1. Should the Audubon society continue to collect weather data during the Christmas Bird Count?__
